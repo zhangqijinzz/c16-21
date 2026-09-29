@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react';
-import { cropForRatio, makeVariant, moveCrop, resizeCrop } from './domain';
-import { EMPTY_DOCUMENT, type FrameDocument, type GuideKey, type Ratio, type ViewState } from './model';
+import { cropForRatio, makeVariant, moveCrop, normalizeCrop, resizeCrop } from './domain';
+import { EMPTY_DOCUMENT, type CropVariant, type FrameDocument, type GuideKey, type Ratio, type ViewState } from './model';
 import type { FrameRepository } from './repository';
 import type { ImageService } from './service';
 
@@ -76,6 +76,10 @@ export class FrameSenseViewModel {
 
   resizeCrop(width: number, height: number): void {
     this.persist({ ...this.state.document, crop: resizeCrop(this.state.document.crop, width, height) }, '裁切范围已调整。');
+  }
+
+  applyCrop(crop: CropVariant): void {
+    this.persist({ ...this.state.document, crop: normalizeCrop(crop) }, '裁切范围已调整。');
   }
 
   markSubject(x: number, y: number): void {
